@@ -45,7 +45,6 @@
         centerNodes = dataC.centerNodes;
     nodes = checkData(nodes);// 去重
 
-
     //添加基本常数初始数据
     for(let i=0;i<nodes.length;i++){
         let flag = 0;
@@ -113,40 +112,55 @@
     //叶子节点度数等于1位置确定
     for(let i=0;i<centerNodes.length;i++){
         let flag  = checkIndexId(centerNodes[i],nodes);
-        let alpha = Math.atan(Math.abs(c.height/2-nodes[flag].position_Y)/Math.abs(c.height/2-nodes[flag].position_X));
+        let alpha = Math.atan((c.height/2-nodes[flag].position_Y)/(c.width/2-nodes[flag].position_X));
         let n = 0;//标记
         let outL = 3;//放大系数
         for(let j=0;j<nodes.length;j++){
             if(matrix[flag][j]==1 && nodes[j].degree==1){
                 let scaleC = outL*(nodes[flag].degree + Math.abs(nodes[flag].degree - MAX_VALUE))/MAX_VALUE*R ;//拉伸系数
-
                 if(nodes[flag].degree != 1){
                     scaleC = (1-2/nodes[flag].degree)*scaleC;
                 }else{
                     scaleC = scaleC/2;
                 }
-
+                let chang = Math.PI/centerNodes.length * n/nodes[flag].degree*1;
                 if(nodes[flag].position_X -c.width/2 >0 &&nodes[flag].position_Y -c.height/2 >0){
-                    nodes[j].position_X = c.width/2 + scaleC *Math.cos(alpha - Math.PI/2/centerNodes.length+n/nodes[flag].degree*Math.PI/centerNodes.length*2);
-                    nodes[j].position_Y = c.height/2 + scaleC  *Math.sin(alpha - Math.PI/2/centerNodes.length+n/nodes[flag].degree*Math.PI/centerNodes.length*2);
-                    n = n+1;
+                    if(n%2){
+                        nodes[j].position_X = c.width /2 + scaleC * Math.cos(alpha+chang);
+                        nodes[j].position_Y = c.height/2 + scaleC * Math.sin(alpha+chang);
+                    }else{
+                        nodes[j].position_X = c.width /2 + scaleC * Math.cos(alpha-chang);
+                        nodes[j].position_Y = c.height/2 + scaleC * Math.sin(alpha-chang);
+                    }
                 }
                 if(nodes[flag].position_X -c.width/2 >0 &&nodes[flag].position_Y -c.height/2 <=0){
-                    nodes[j].position_X = c.width/2 + scaleC *Math.cos(alpha - Math.PI/2/centerNodes.length+n/nodes[flag].degree*Math.PI/centerNodes.length*2 -Math.PI/2);
-                    nodes[j].position_Y = c.height/2 +scaleC*Math.sin(alpha - Math.PI/2/centerNodes.length+n/nodes[flag].degree*Math.PI/centerNodes.length*2-Math.PI/2);
-                    n = n+1;
+                    if(n%2){
+                        nodes[j].position_X = c.width/2 + scaleC *Math.cos(alpha - chang);
+                        nodes[j].position_Y = c.height/2 +scaleC*Math.sin(alpha - chang-Math.PI/2);
+                    }else{
+                        nodes[j].position_X = c.width/2 + scaleC *Math.cos(alpha + chang);
+                        nodes[j].position_Y = c.height/2+scaleC*Math.sin(alpha + chang-Math.PI/2);
+                    }
                 }
                 if(nodes[flag].position_X -c.width/2 <=0 &&nodes[flag].position_Y -c.height/2 <=0){
-                    nodes[j].position_X = c.width/2 + scaleC *Math.cos(alpha - Math.PI/2/centerNodes.length+n/nodes[flag].degree*Math.PI/centerNodes.length*2 -Math.PI);
-                    nodes[j].position_Y = c.height/2 + scaleC *Math.sin(alpha - Math.PI/2/centerNodes.length+n/nodes[flag].degree*Math.PI/centerNodes.length*2-Math.PI);
-                    n = n+1;
-                }
+                   if(n%2){
+                       nodes[j].position_X = c.width/2 + scaleC *Math.cos(alpha - chang+Math.PI);
+                       nodes[j].position_Y = c.height/2 + scaleC *Math.sin(alpha - chang+Math.PI);
+                   }else{
+                       nodes[j].position_X = c.width/2 + scaleC *Math.cos(alpha + chang+Math.PI);
+                       nodes[j].position_Y = c.height/2 + scaleC *Math.sin(alpha + chang+Math.PI);
+                   }
+               }
                 if(nodes[flag].position_X -c.width/2 <=0 &&nodes[flag].position_Y -c.height/2 >0){
-                    nodes[j].position_X = c.width/2 + scaleC *Math.cos(alpha - Math.PI/2/centerNodes.length+n/nodes[flag].degree*Math.PI/centerNodes.length*2 -Math.PI/4+Math.PI);
-                    nodes[j].position_Y = c.height/2 +scaleC *Math.sin(alpha - Math.PI/2/centerNodes.length+n/nodes[flag].degree*Math.PI/centerNodes.length*2-Math.PI/4+Math.PI);
-                    n = n+1;
-                }
-
+                  if(n%2){
+                      nodes[j].position_X = c.width/2 - scaleC *Math.cos(alpha - chang );
+                      nodes[j].position_Y = c.height/2 - scaleC *Math.sin(alpha - chang);
+                  }else{
+                      nodes[j].position_X = c.width/2 - scaleC *Math.cos(alpha + chang);
+                      nodes[j].position_Y = c.height/2 - scaleC *Math.sin(alpha + chang);
+                  }
+               }
+                n = n+1;
             }
         }
     }
@@ -154,7 +168,6 @@
     //叶子节点度数大于1位置确定
     for(let i=0;i<nodes.length;i++){
         if(!checkPoint(i,nodes,centerNodes)){
-            // let array=matrix[i];
             if(matrix[i].sum()>1){
                 let xL = 0,
                     yL = 0;
@@ -167,9 +180,7 @@
                 nodes[i].position_X = xL/matrix[i].sum();
                 nodes[i].position_Y = yL/matrix[i].sum();
             }
-
         }
-
     }
     //初始化绘制网络
     drawing(nodes,links,centerNodes);//绘制图形
@@ -533,6 +544,7 @@
     function drawLine(nodeO,nodeT,pay,color){
         ct.beginPath();
         ct.lineWidth = 0.5;
+        ct.font = "lighter 8px Arial";
         ct.strokeStyle = color;
         ct.fillStyle = color;
         let mdx = Math.abs(nodeO.position_X+nodeT.position_X)/2;
@@ -590,7 +602,7 @@
         }
         ct.stroke();
         ct.fill();
-        ct.lineWidth = 5;
+        ct.lineWidth = 3;
     }
     //绘制图形
     function drawing(nodes,links,centerNodes){

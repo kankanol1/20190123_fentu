@@ -493,7 +493,7 @@
     //字体设置
     function setFont(){
         ct.fillStyle = "#000";
-        ct.font = "lighter 10px Arial";
+        ct.font = "lighter 12px Arial";
         ct.textAlign = "center";
         ct.textBaseline = "middle";
     }
@@ -560,6 +560,7 @@
     //绘制连线
     function drawLine(nodeO,nodeT,pay,color){
         ct.beginPath();
+        ct.font = "lighter 10px Arial";
         ct.lineWidth = 0.5;
         ct.strokeStyle = color;
         ct.fillStyle = color;
@@ -621,7 +622,7 @@
         }
         ct.stroke();
         ct.fill();
-        ct.lineWidth = 5;
+        ct.lineWidth = 3;
     }
     //绘制图形
     function drawing(nodes,links,centerNodes){

@@ -7,12 +7,7 @@
     /**************************************************添加原型方法************************************************/
 
     Array.prototype.insert = function (index, item) {  this.splice(index, 0, item);  };
-    Array.prototype.sum = function (){
-        return this.reduce(function (partial, value){
-            return partial + value;
-        })
-    };
-
+    Array.prototype.sum = function (){return this.reduce(function (partial, value){return partial + value;})};
 
     /**************************************************元素查找************************************************/
 
@@ -43,7 +38,7 @@
     /**************************************************数据加载和应用************************************************/
 
     dataC = data.data;
-    console.log(dataC);//检验是否读取数据
+    // console.log(dataC);//检验是否读取数据
     let links = dataC.links,
         nodes = dataC.nodes,
         centerNodes = dataC.centerNodes;
@@ -98,7 +93,6 @@
             sum += item;
         });
         nodes[i].degree = sum;
-
     }
     //初始化绘制网络
     methodRandom();
@@ -203,8 +197,6 @@
                haiLunFun(links,nodes,xd,yd,centerNodes);
             }
         };
-
-
 
 
     /*******************************************   函数   ************************************************/
@@ -458,8 +450,6 @@
         ct.stroke();
         setFont();//设置字体
         ct.fillText(nodes[n].propertyList.name.slice(0,5)+"...",px ,py - r-12);
-        // ct.fillStyle = "#fff";
-
     }
     //绘制叶子节点
     function drawingN(px,py,r,lw,n,nodes){
@@ -472,13 +462,11 @@
         ct.stroke();
         setFont();//设置字体
         ct.fillText(nodes[n].propertyList.name.slice(0,5)+"...",px ,py - r-12);
-        // ct.fillStyle = "#fff";
-
     }
     //字体设置
-    function setFont(){
+    function setFont() {
         ct.fillStyle = "#000";
-        ct.font = "lighter 10px Arial";
+        ct.font = "lighter 12px Arial";
         ct.textAlign = "center";
         ct.textBaseline = "middle";
     }
@@ -509,8 +497,6 @@
     }
     //绘制箭头
     function drawTriangleRB(x,y,alpha,beta){
-        // ct.strokeStyle = "#666";
-        // ct.fillStyle = "#666";
         ct.lineTo(x+triC*Math.cos(beta - Math.PI/6),y+triC*Math.sin(beta -Math.PI/6));
         ct.lineTo(x+triC*Math.sin(alpha - Math.PI/6),y+triC*Math.cos(alpha - Math.PI/6));
         ct.lineTo(x,y);
@@ -545,6 +531,7 @@
     //绘制连线
     function drawLine(nodeO,nodeT,pay,color){
         ct.beginPath();
+        ct.font = "lighter 10px Arial";
         ct.lineWidth = 0.5;
         ct.strokeStyle = color;
         ct.fillStyle = color;
@@ -557,9 +544,6 @@
             ct.moveTo(nodeO.position_X  - Math.cos(beta)*(radius+5) ,nodeO.position_Y - Math.sin(beta) * (radius+5));
             ct.lineTo(mdx + Math.sin(alpha)*textL,mdy + Math.cos(alpha)*textL);
             ct.moveTo(mdx - Math.sin(alpha)*textL,mdy - Math.cos(alpha)*textL);
-
-            // console.log("测试");
-
             ct.lineTo(nodeT.position_X + Math.sin(alpha) *(radius+5)*0.5,nodeT.position_Y  + Math.cos(alpha) * (radius+5)*0.5);
             drawTriangleRB(nodeT.position_X + Math.sin(alpha) *(radius+5)*0.5,nodeT.position_Y  + Math.cos(alpha) * (radius+5)*0.5,alpha,beta);
             ct.translate((nodeO.position_X+nodeT.position_X)/2,(nodeO.position_Y+nodeT.position_Y)/2);
@@ -606,7 +590,7 @@
         }
         ct.stroke();
         ct.fill();
-        ct.lineWidth = 5;
+        ct.lineWidth = 3;
     }
     //绘制图形
     function drawing(nodes,links,centerNodes){
